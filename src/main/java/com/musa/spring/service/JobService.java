@@ -1,7 +1,6 @@
 package com.musa.spring.service;
 
 import com.musa.spring.entity.Job;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
