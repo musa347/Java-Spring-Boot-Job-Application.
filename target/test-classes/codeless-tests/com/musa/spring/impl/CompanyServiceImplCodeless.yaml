@@ -1,0 +1,153 @@
+---
+class: "com.musa.spring.impl.CompanyServiceImpl"
+fields:
+- "CompanyRepository companyRepository"
+imports:
+- "com.musa.spring.repo.CompanyRepository"
+- "com.musa.spring.entity.Company"
+- "java.util.List"
+- "java.lang.Long"
+- "java.lang.String"
+- "java.util.Optional"
+- "java.lang.Object"
+- "void"
+- "com.musa.spring.entity.Job"
+methods:
+- targetMethod: "getAllCompanies(): List<Company> result"
+  tests:
+  - name: "getAllCompaniesTest"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "findAll(): List<Company> list"
+    - list: "NEW List<Company>()"
+      elements: []
+    - result: "REF list"
+  sourceCodeSignature: "List<Company> getAllCompanies()"
+- targetMethod: "updateCompany(Company company, Long id): boolean result"
+  tests:
+  - name: "updateCompanyWhenCompanyOptionalIsPresent"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - name: "name1"
+    - company: "NEW Company()"
+      fields:
+      - "String name = REF name"
+    - id: 0
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "findById(Long id): Optional<Company> optional"
+      - "save(Company object): Object object2"
+    - object: "MOCK"
+      mock-expressions:
+      - "setName(String name): void void"
+      - "getDescription(): String description"
+      - "setDescription(String description): void void2"
+      - "getJobs(): List<Job> list"
+      - "setJobs(List<Job> list): void void3"
+    - optional: "EVAL Optional.ofNullable(Company object)"
+    - object2: "NEW Object()"
+    - void: "VOID"
+    - description: "return_of_getDescription1"
+    - void2: "VOID"
+    - list: "NEW List<Job>()"
+      elements: []
+    - void3: "VOID"
+    - expectedResult: true
+    - result: "REF expectedResult"
+    branches:
+    - expression: "companyOptional.isPresent() : true"
+      lineNumber: 28
+  - name: "updateCompanyWhenCompanyOptionalNotIsPresent"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - company: "MOCK"
+    - id: 0
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "findById(Long id): Optional<Company> optional"
+    - uniqueUuid1: "NULL"
+    - optional: "EVAL Optional.ofNullable(Company uniqueUuid1)"
+    - expectedResult: false
+    - result: "REF expectedResult"
+    branches:
+    - expression: "companyOptional.isPresent() : false"
+      lineNumber: 28
+  sourceCodeSignature: "boolean updateCompany(Company company, Long id)"
+- targetMethod: "createCompany(Company company): void result"
+  tests:
+  - name: "createCompanyTest"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - company: "MOCK"
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "save(Company company): Object object"
+    - object: "NEW Object()"
+    - expectedResult: "VOID"
+    - result: "REF expectedResult"
+  sourceCodeSignature: "void createCompany(Company company)"
+- targetMethod: "deleteCompanyById(Long id): boolean result"
+  tests:
+  - name: "deleteCompanyByIdWhenCompanyRepositoryExistsByIdId"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - id: 0
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "existsById(Long id): boolean boolean1"
+      - "deleteById(Long id): void void"
+    - boolean1: true
+    - void: "VOID"
+    - expectedResult: true
+    - result: "REF expectedResult"
+    branches:
+    - expression: "companyRepository.existsById(id) : true"
+      lineNumber: 43
+  - name: "deleteCompanyByIdWhenCompanyRepositoryNotExistsByIdId"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - id: 0
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "existsById(Long id): boolean boolean1"
+    - boolean1: false
+    - expectedResult: false
+    - result: "REF expectedResult"
+    branches:
+    - expression: "companyRepository.existsById(id) : false"
+      lineNumber: 43
+  sourceCodeSignature: "boolean deleteCompanyById(Long id)"
+- targetMethod: "getCompanyById(Long id): Company result"
+  tests:
+  - name: "getCompanyByIdWhenCompanyRepositoryExistsByIdId"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - id: 0
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "existsById(Long id): boolean boolean1"
+      - "findById(Long id): Optional optional"
+    - boolean1: true
+    - optionalEmpty: "NULL"
+    - optional: "EVAL Optional.ofNullable(null optionalEmpty)"
+    - expectedResult: "NULL"
+    - result: "REF expectedResult"
+    branches:
+    - expression: "companyRepository.existsById(id) : true"
+      lineNumber: 52
+  - name: "getCompanyByIdWhenCompanyRepositoryNotExistsByIdId"
+    target: "NEW CompanyServiceImpl(CompanyRepository companyRepository)"
+    variables:
+    - id: 0
+    - companyRepository: "MOCK"
+      mock-expressions:
+      - "existsById(Long id): boolean boolean1"
+    - boolean1: false
+    - company: "NULL"
+    - result: "REF company"
+    branches:
+    - expression: "companyRepository.existsById(id) : false"
+      lineNumber: 52
+  sourceCodeSignature: "Company getCompanyById(Long id)"
